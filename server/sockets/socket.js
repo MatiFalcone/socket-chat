@@ -21,12 +21,9 @@ io.on('connection', (client) => {
 
         let personas = usuarios.addPersona(client.id, data.nombre, data.sala);
 
+        client.broadcast.to(data.sala).emit('crearMensaje', crearMensaje('Administrador', `${ data.nombre } entró a la sala ${ data.sala }`));
+
         client.broadcast.to(data.sala).emit('listaPersonas', usuarios.getPersonasPorSala(data.sala));
-        client.broadcast.to(data.sala).emit('crearMensaje', crearMensaje('Administrador', `${ data.nombre } entró al chat`));
-
-        console.log(`${ data.nombre } se conectó a la sala ${ data.sala }`);
-
-        console.log('La lista de personas conectadas es: ', personas);
 
         callback(usuarios.getPersonas());
 
@@ -50,11 +47,7 @@ io.on('connection', (client) => {
         client.broadcast.to(personaBorrada.sala).emit('crearMensaje', crearMensaje('Administrador', ` ${ personaBorrada.nombre } salió de la sala ${ personaBorrada.sala }`));
         client.broadcast.to(personaBorrada.sala).emit('listaPersonas', usuarios.getPersonasPorSala(personaBorrada.sala));
 
-        console.log(`${ personaBorrada.nombre } se desconectó de la sala ${ personaBorrada.sala }`);
-
         let personas = usuarios.getPersonas();
-        
-        console.log('La lista de personas conectadas es ahora: ', personas);
 
     });
 
